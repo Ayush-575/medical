@@ -1,0 +1,44 @@
+package com.example.Medical_store.Service;
+
+import com.example.Medical_store.Entity.OrderItem;
+import com.example.Medical_store.Exception.OrderItemNotFoundException;
+import com.example.Medical_store.Repository.OrderItemRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class OrderItemService {
+
+    private final OrderItemRepository orderItemRepository;
+
+    public OrderItemService(OrderItemRepository orderItemRepository) {
+        this.orderItemRepository = orderItemRepository;
+    }
+
+    public OrderItem addOrderItem(
+            OrderItem orderItem) {
+
+        return orderItemRepository.save(orderItem);
+    }
+
+    public List<OrderItem> getAllOrderItems() {
+
+        return orderItemRepository.findAll();
+    }
+
+    public OrderItem getOrderItemById(Long id) {
+
+        return orderItemRepository.findById(id)
+                .orElseThrow(() ->
+                        new OrderItemNotFoundException(
+                                "Order Item not found with id : " + id));
+    }
+
+    public void deleteOrderItem(Long id) {
+
+        OrderItem item = getOrderItemById(id);
+
+        orderItemRepository.delete(item);
+    }
+}
